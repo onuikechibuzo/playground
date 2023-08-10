@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Linear Regression Visualization</title>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    
+    // Sample data points
+    const data = [
+      { x: 1, y: 2 },
+      { x: 2, y: 3 },
+      { x: 3, y: 5 },
+      { x: 4, y: 4 },
+      { x: 5, y: 6 },
+    ];
+    
+    // Calculate linear regression parameters (y = mx + b)
+    const sumX = data.reduce((sum, point) => sum + point.x, 0);
+    const sumY = data.reduce((sum, point) => sum + point.y, 0);
+    const sumXY = data.reduce((sum, point) => sum + point.x * point.y, 0);
+    const sumX2 = data.reduce((sum, point) => sum + point.x ** 2, 0);
+    const n = data.length;
+    
+    const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX ** 2);
+    const b = (sumY - m * sumX) / n;
+    
+    // Draw the data points
+    ctx.fillStyle = "blue";
+    data.forEach(point => {
+      const x = point.x * 50;
+      const y = canvas.height - point.y * 50;
+      ctx.fillRect(x - 3, y - 3, 6, 6);
+    });
+    
+    // Draw the fitted line
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 2;
+    const xStart = 0;
+    const xEnd = canvas.width / 50;
+    const yStart = b * 50;
+    const yEnd = m * xEnd * 50 + b * 50;
+    ctx.beginPath();
+    ctx.moveTo(xStart, canvas.height - yStart);
+    ctx.lineTo(xEnd * 50, canvas.height - yEnd);
+    ctx.stroke();
+  </script>
+</body>
+</html>
